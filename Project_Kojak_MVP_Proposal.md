@@ -12,7 +12,15 @@ As a "like-to-have", I would hope to implement a "Cravings Predictor", which cou
 * day of week
 * recency of that food being eaten.
 
+Another "like-to-have" would be functionality in the app to alert users of abnormal health monitoring issues such as:
+    1. Abnormal sleeping patterns
+    2. Abnormal nutrient imbalance
+    3. Vitamin deficiency
+    4. Below threshold of “acceptable” activity
+
 If I could then incorporate the cravings index to the recommendations from the Food Network/Yummly recipes, I could show food recommendations with no user input and the impact that meal would have on future weight and biometric statistics.
+
+Last, I hope to build the app to update "real-time", if possible. Update with new data weekly?
 
 ### Dataset
 
