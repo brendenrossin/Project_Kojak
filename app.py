@@ -1,5 +1,7 @@
 from flask import Flask, abort, render_template, jsonify, request
 from api import prophet_forecast_weight, nutritional_breakdown, get_features, example, df
+from api import yummly_df, recipe_cosine_similarity, get_closest_recipes, food_recommendations, flask_output
+import random
 
 app = Flask('WeightLossApp')
 
@@ -19,7 +21,7 @@ def do_prediction():
     features = get_features(converted_data, fat_breakdown, protein_breakdown,
                             carb_breakdown, calorie_breakdown)
 
-    response = prophet_forecast_weight(features, df, periods=90, date=converted_data['Date'])
+    response = flask_output(features, df, yummly_df, converted_data, periods=90)
 
     return jsonify(response)
 

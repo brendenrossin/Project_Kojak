@@ -5,9 +5,11 @@ import datetime
 from fbprophet import Prophet
 from fbprophet.plot import add_changepoints_to_plot
 from fbprophet.diagnostics import performance_metrics
+import random
 
 prophet_final = pickle.load(open('Models/Prophet_Final.pkl', 'rb'))
 df = pd.read_pickle("Data/Prophet_Forecast_DF.pkl")
+yummly_df = pd.read_pickle("Data/Yummly_Data/Yummly_DF.pkl")
 
 example = {
     'Steps': df.describe()['Steps']['mean'],
@@ -101,7 +103,7 @@ def prophet_forecast_weight(features, df, periods, date, cap=None, floor=170):
 
     }
 
-    return result
+    return predicted_weight, predicted_weight_upper, predicted_weight_lower
 
 
 def nutritional_breakdown(df, converted_data):
@@ -272,6 +274,191 @@ def get_features(converted_data, fat_breakdown, protein_breakdown, carb_breakdow
     }
 
     return features
+
+
+def recipe_cosine_similarity(ideal_recipe_vec, new_recipe_vec):
+    # ideal_recipe_vec == array of [ideal_meal_cals, ideal_meal_fat, ideal_meal_protein, ideal_meal_carb]
+    # new_recipe_vec == array of [new_meal_cals, new_meal_fat, new_meal_protein, new_meal_carb]
+    return np.dot(ideal_recipe_vec, new_recipe_vec) / np.sqrt(np.dot(ideal_recipe_vec, ideal_recipe_vec) * np.dot(new_recipe_vec, new_recipe_vec))
+
+
+def get_closest_recipes(ideal_recipe_vec, new_recipe_vecs):
+    recipe_similarities = []
+    for i in new_recipe_vecs:
+        new_recipe_vec = i[2]
+        cosine_sim = recipe_cosine_similarity(ideal_recipe_vec, new_recipe_vec)
+        if np.isnan(cosine_sim) == False:
+            recipe_similarities.append([i[1], i[3], i[4], cosine_sim])
+
+    recipe_similarities = sorted(recipe_similarities, key=lambda x: x[3], reverse=True)
+
+    return recipe_similarities[:5]
+
+
+def food_recommendations(df, converted_data):
+
+    cuisine_list = [key for key, value in converted_data.items() if value != 0.0]
+
+    breakfast_df = df[df['course'].str.contains(
+        'breakfast') & df['cuisine'].str.contains('|'.join(cuisine_list))]
+    lunch_df = df[df['course'].str.contains(
+        'lunch') & df['cuisine'].str.contains('|'.join(cuisine_list))]
+    dinner_df = df[df['course'].str.contains(
+        'main dishes') & df['cuisine'].str.contains('|'.join(cuisine_list))]
+
+    total_calories = converted_data['Daily_Calories']
+    percent_fat = converted_data['Daily_Fat']
+    percent_protein = converted_data['Daily_Protein']
+    percent_carb = converted_data['Daily_Carbs']
+    percent_breakfast = converted_data['Percent_Breakfast']
+    percent_lunch = converted_data['Percent_Lunch']
+    percent_dinner = converted_data['Percent_Dinner']
+
+    cals_per_g_fat = 9
+    cals_per_g_protein = 4
+    cals_per_g_carb = 4
+
+    percent_breakfast = percent_breakfast / 100
+    percent_lunch = percent_lunch / 100
+    percent_dinner = percent_dinner / 100
+
+    calories_breakdown = {}
+
+    calories_columns = ['Calories_Breakfast', 'Calories_Lunch', 'Calories_Dinner']
+
+    calories_breakdown['Calories_Breakfast'] = total_calories * percent_breakfast
+    calories_breakdown['Calories_Lunch'] = total_calories * percent_lunch
+    calories_breakdown['Calories_Dinner'] = total_calories * percent_dinner
+
+    percent_fat = percent_fat / 100
+    percent_protein = percent_protein / 100
+    percent_carb = percent_carb / 100
+
+    breakfast_recipes = []
+
+    g_fat = total_calories * percent_fat / cals_per_g_fat
+    g_protein = total_calories * percent_protein / cals_per_g_protein
+    g_carbs = total_calories * percent_carb / cals_per_g_carb
+
+    g_fat_breakfast = g_fat * percent_breakfast
+    g_fat_lunch = g_fat * percent_lunch
+    g_fat_dinner = g_fat * percent_dinner
+
+    g_protein_breakfast = g_protein * percent_breakfast
+    g_protein_lunch = g_protein * percent_lunch
+    g_protein_dinner = g_protein * percent_dinner
+
+    g_carbs_breakfast = g_carbs * percent_breakfast
+    g_carbs_lunch = g_carbs * percent_lunch
+    g_carbs_dinner = g_carbs * percent_dinner
+
+    ideal_breakfast_recipe_vec = [calories_breakdown['Calories_Breakfast'],
+                                  g_fat_breakfast, g_protein_breakfast, g_carbs_breakfast]
+    ideal_lunch_recipe_vec = [calories_breakdown['Calories_Lunch'],
+                              g_fat_lunch, g_protein_lunch, g_carbs_lunch]
+    ideal_dinner_recipe_vec = [calories_breakdown['Calories_Dinner'],
+                               g_fat_dinner, g_protein_dinner, g_carbs_dinner]
+
+    breakfast_recipe_vecs = [(index, row['name'], row[['energy_kcal', 'fat_g', 'protein_g', 'carbs_g']].values,
+                              row['source_url'], row['recipe_image']) for index, row in breakfast_df.iterrows()]
+    lunch_recipe_vecs = [(index, row['name'], row[['energy_kcal', 'fat_g', 'protein_g', 'carbs_g']
+                                                  ].values, row['source_url'], row['recipe_image']) for index, row in lunch_df.iterrows()]
+    dinner_recipe_vecs = [(index, row['name'], row[['energy_kcal', 'fat_g', 'protein_g', 'carbs_g']
+                                                   ].values, row['source_url'], row['recipe_image']) for index, row in dinner_df.iterrows()]
+
+    breakfast_recipe_similarities = get_closest_recipes(
+        ideal_breakfast_recipe_vec, breakfast_recipe_vecs)
+    lunch_recipe_similarities = get_closest_recipes(ideal_lunch_recipe_vec, lunch_recipe_vecs)
+    dinner_recipe_similarities = get_closest_recipes(ideal_dinner_recipe_vec, dinner_recipe_vecs)
+
+    return breakfast_recipe_similarities, lunch_recipe_similarities, dinner_recipe_similarities
+
+
+def flask_output(features, df, yummly_df, converted_data, periods=90):
+
+    predicted_weight, predicted_weight_upper, predicted_weight_lower = prophet_forecast_weight(
+        features, df, periods=90, date=converted_data['Date'])
+
+    breakfast_recipes, lunch_recipes, dinner_recipes = food_recommendations(
+        yummly_df, converted_data)
+
+    breakfast_recipe_names = [i[0] for i in breakfast_recipes]
+    lunch_recipe_names = [i[0] for i in lunch_recipes]
+    dinner_recipe_names = [i[0] for i in dinner_recipes]
+
+    breakfast_recipe_urls = [i[1] for i in breakfast_recipes]
+    lunch_recipe_urls = [i[1] for i in lunch_recipes]
+    dinner_recipe_urls = [i[1] for i in dinner_recipes]
+
+    first_breakfast_recipe_name, first_breakfast_recipe_url = breakfast_recipe_names[
+        0], breakfast_recipe_urls[0]
+    second_breakfast_recipe_name, second_breakfast_recipe_url = breakfast_recipe_names[
+        1], breakfast_recipe_urls[1]
+    third_breakfast_recipe_name, third_breakfast_recipe_url = breakfast_recipe_names[
+        2], breakfast_recipe_urls[2]
+    fourth_breakfast_recipe_name, fourth_breakfast_recipe_url = breakfast_recipe_names[
+        3], breakfast_recipe_urls[3]
+    fifth_breakfast_recipe_name, fifth_breakfast_recipe_url = breakfast_recipe_names[
+        4], breakfast_recipe_urls[4]
+
+    first_lunch_recipe_name, first_lunch_recipe_url = lunch_recipe_names[0], lunch_recipe_urls[0]
+    second_lunch_recipe_name, second_lunch_recipe_url = lunch_recipe_names[1], lunch_recipe_urls[1]
+    third_lunch_recipe_name, third_lunch_recipe_url = lunch_recipe_names[2], lunch_recipe_urls[2]
+    fourth_lunch_recipe_name, fourth_lunch_recipe_url = lunch_recipe_names[3], lunch_recipe_urls[3]
+    fifth_lunch_recipe_name, fifth_lunch_recipe_url = lunch_recipe_names[4], lunch_recipe_urls[4]
+
+    first_dinner_recipe_name, first_dinner_recipe_url = dinner_recipe_names[0], dinner_recipe_urls[0]
+    second_dinner_recipe_name, second_dinner_recipe_url = dinner_recipe_names[1], dinner_recipe_urls[1]
+    third_dinner_recipe_name, third_dinner_recipe_url = dinner_recipe_names[2], dinner_recipe_urls[2]
+    fourth_dinner_recipe_name, fourth_dinner_recipe_url = dinner_recipe_names[3], dinner_recipe_urls[3]
+    fifth_dinner_recipe_name, fifth_dinner_recipe_url = dinner_recipe_names[4], dinner_recipe_urls[4]
+
+    breakfast_image = random.choice([i[2] for i in breakfast_recipes])
+    lunch_image = random.choice([i[2] for i in lunch_recipes])
+    dinner_image = random.choice([i[2] for i in dinner_recipes])
+
+    result = {
+
+        'predicted_weight': predicted_weight,
+        'predicted_weight_upper': predicted_weight_upper,
+        'predicted_weight_lower': predicted_weight_lower,
+        'breakfast_image': breakfast_image,
+        'lunch_image': lunch_image,
+        'dinner_image': dinner_image,
+        'first_breakfast_recipe_name': first_breakfast_recipe_name,
+        'second_breakfast_recipe_name': second_breakfast_recipe_name,
+        'third_breakfast_recipe_name': third_breakfast_recipe_name,
+        'fourth_breakfast_recipe_name': fourth_breakfast_recipe_name,
+        'fifth_breakfast_recipe_name': fifth_breakfast_recipe_name,
+        'first_breakfast_recipe_url': first_breakfast_recipe_url,
+        'second_breakfast_recipe_url': second_breakfast_recipe_url,
+        'third_breakfast_recipe_url': third_breakfast_recipe_url,
+        'fourth_breakfast_recipe_url': fourth_breakfast_recipe_url,
+        'fifth_breakfast_recipe_url': fifth_breakfast_recipe_url,
+        'first_lunch_recipe_name': first_lunch_recipe_name,
+        'second_lunch_recipe_name': second_lunch_recipe_name,
+        'third_lunch_recipe_name': third_lunch_recipe_name,
+        'fourth_lunch_recipe_name': fourth_lunch_recipe_name,
+        'fifth_lunch_recipe_name': fifth_lunch_recipe_name,
+        'first_lunch_recipe_url': first_lunch_recipe_url,
+        'second_lunch_recipe_url': second_lunch_recipe_url,
+        'third_lunch_recipe_url': third_lunch_recipe_url,
+        'fourth_lunch_recipe_url': fourth_lunch_recipe_url,
+        'fifth_lunch_recipe_url': fifth_lunch_recipe_url,
+        'first_dinner_recipe_name': first_dinner_recipe_name,
+        'second_dinner_recipe_name': second_dinner_recipe_name,
+        'third_dinner_recipe_name': third_dinner_recipe_name,
+        'fourth_dinner_recipe_name': fourth_dinner_recipe_name,
+        'fifth_dinner_recipe_name': fifth_dinner_recipe_name,
+        'first_dinner_recipe_url': first_dinner_recipe_url,
+        'second_dinner_recipe_url': second_dinner_recipe_url,
+        'third_dinner_recipe_url': third_dinner_recipe_url,
+        'fourth_dinner_recipe_url': fourth_dinner_recipe_url,
+        'fifth_dinner_recipe_url': fifth_dinner_recipe_url
+
+    }
+
+    return result
 
 
 if __name__ == '__main__':
