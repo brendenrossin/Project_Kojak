@@ -1,0 +1,406 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Weight Loss App</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="/static/css/style10.css" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-static-top">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#">Weight Loss App</a>
+		</div>
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="#">About</a></li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Services<span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li><a href="#">Fitness</a></li>
+						<li><a href="#">Nutrition</a></li>
+						<li><a href="#">Algorithms</a></li>
+					</ul>
+				</li>
+				<li><a href="#">Contact</a></li>
+			</ul>
+		</div>
+	</div>
+</nav>
+
+<div class="jumbotron">
+	<div class="container">
+		<h1>Brett don't get fat again!</h1>
+		<p>Brett was fat. Brett was also Brent. Now, he's not fat Brett.</p>
+	</div>
+</div>
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-6">
+            <fieldset>
+                <legend class='legend'>
+                    <span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>
+                    Calorie Breakdown</legend>
+
+                    <div class='Daily_Calories'>
+                        <input type='number' id='Daily_Calories' name='Daily_Calories'
+                               value='2000' />
+                        <label for='Daily_Calories'>Daily Calorie Intake</label>
+                    </div>
+
+                    <div></div>
+
+                    <div class='Percent_Breakfast'>
+                        <input type='number' id='Percent_Breakfast' name='Percent_Breakfast'
+                               value='20' />
+                        <label for='Percent_Breakfast'>% Breakfast</label>
+                    </div>
+
+                    <div class='Percent_Lunch'>
+                        <input type='number' id='Percent_Lunch' name='Percent_Lunch'
+                               value='40' />
+                        <label for='Percent_Lunch'>% Lunch</label>
+                    </div>
+
+                    <div class='Percent_Dinner'>
+                        <input type='number' id='Percent_Dinner' name='Percent_Dinner'
+                               value='40' />
+                        <label for='Percent_Dinner'>% Dinner</label>
+                    </div>
+
+                    <div></div>
+
+            </fieldset>
+		</div>
+
+        <div class="col-md-6">
+            <fieldset>
+                <legend class='legend'>
+                    <span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>
+                    Nutritional Breakdown</legend>
+
+                    <div class='Daily_Fat'>
+                        <input type='number' id='Daily_Fat' name='Daily_Fat'
+                               value='35' />
+                        <label for='Daily_Fat'>Fat %</label>
+                    </div>
+
+                    <div class='Daily_Carbs'>
+                        <input type='number' id='Daily_Carbs' name='Daily_Carbs'
+                               value='25' />
+                        <label for='Daily_Carbs'>Carbohydrate %</label>
+                    </div>
+
+                    <div class='Daily_Protein'>
+                        <input type='number' id='Daily_Protein' name='Daily_Protein'
+                               value='40' />
+                        <label for='Daily_Protein'>Protein %</label>
+                    </div>
+
+            </fieldset>
+		</div>
+
+	</div>
+
+    <div class="row">
+		<div class="col-md-6">
+            <fieldset>
+                <legend class='legend'>
+                    <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+                    Activity Goals</legend>
+
+                <div class='Steps'>
+                    <input type='number' id='Steps' name='Steps'
+                           value='10000' />
+                    <label for='Steps'>Steps</label>
+                </div>
+
+                <div class='Minutes_Lightly_Active'>
+                    <input type='number' id='Minutes_Lightly_Active' name='Minutes_Lightly_Active'
+                           value='100' />
+                    <label for='Minutes_Lightly_Active'>Minutes Lightly Active</label>
+                </div>
+
+                <div class='Minutes_Fairly_Active'>
+                    <input type='number' id='Minutes_Fairly_Active' name='Minutes_Fairly_Active'
+                           value='60' />
+                    <label for='Minutes_Fairly_Active'>Minutes Fairly Active</label>
+                </div>
+
+                <div class='Minutes_Very_Active'>
+                    <input type='number' id='Minutes_Very_Active' name='Minutes_Very_Active'
+                           value='20' />
+                    <label for='Minutes_Very_Active'>Minutes Very Active</label>
+                </div>
+            </fieldset>
+		</div>
+
+        <div class="col-md-6">
+            <fieldset>
+                <legend class='legend'>
+                    <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+                    Weight Prediction Date</legend>
+
+                <div class='Future_Date'>
+                    <input type='date' id='Future_Date' name='Future_Date'
+                           value='2018-10-01' />
+                    <label for='Future_Date'>Date</label>
+                </div>
+            </fieldset>
+		</div>
+    </div>
+
+    <div class="row">
+        <div class='col-md-6'>
+            <fieldset>
+                <legend>Which cuisines do you like?</legend>
+
+                <div>
+                    <input type="checkbox" id="american" name="american"
+                           value=0.0 />
+                    <label for="american">American</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" id="italian" name="italian"
+                           value=0.0 checked />
+                    <label for="italian">Italian</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" id="chinese" name="chinese"
+                           value=0.0/>
+                    <label for="chinese">Chinese</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" id="mexican" name="mexican"
+                           value=0.0 checked />
+                    <label for="mexican">Mexican</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" id="japanese" name="japanese"
+                           value=0.0 checked />
+                    <label for="japanese">Japanese</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" id="greek" name="greek"
+                           value=0.0/>
+                    <label for="greek">Greek</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" id="mediterranean" name="mediterranean"
+                           value=0.0 checked />
+                    <label for="mediterranean">Mediterranean</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" id="barbecue" name="barbecue"
+                           value=0.0 checked />
+                    <label for="barbecue">Barbecue</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" id="german" name="german"
+                           value=0.0/>
+                    <label for="german">German</label>
+                </div>
+
+            </fieldset>
+        </div>
+
+    </div>
+
+</div>
+
+<br>
+
+<div class="jumbotron">
+	<div class="container">
+        <div class="panel panel-warning">
+          <div class="panel-heading">
+                <h3 class="panel-title"><span>Predicted Weight: </span><span id="hard_predict">lbs.</span></h3>
+              </div>
+              <div class="panel-body">
+                <span>Your predicted weight lower bound: <span id="lower_predict"></span>lbs.</span>
+                <div></div>
+                <span>Your predicted weight upper bound: <span id="upper_predict"></span>lbs.</span>
+              </div>
+          </div>
+        <p><a class="btn btn-primary btn-lg" href="#" id="submit" role="button">Make prediction</a></p>
+        <br>
+    </div>
+</div>
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-4">
+            <fieldset>
+                <legend class='legend'>
+                    <span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>
+                    Breakfast Recommendations</legend>
+
+                        <ul style="list-style-type:circle">
+                          <li id='first_breakfast_recipe_name'></li>
+                          <li id='second_breakfast_recipe_name'></li>
+                          <li id='third_breakfast_recipe_name'></li>
+                          <li id='fourth_breakfast_recipe_name'></li>
+                          <li id='fifth_breakfast_recipe_name'></li>
+                        </ul>
+            </fieldset>
+		</div>
+
+        <div class="col-md-4">
+            <fieldset>
+                <legend class='legend'>
+                    <span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>
+                    Lunch Recommendations</legend>
+
+                        <ul style="list-style-type:circle">
+                          <li id='first_lunch_recipe_name'></li>
+                          <li id='second_lunch_recipe_name'></li>
+                          <li id='third_lunch_recipe_name'></li>
+                          <li id='fourth_lunch_recipe_name'></li>
+                          <li id='fifth_lunch_recipe_name'></li>
+                        </ul>
+            </fieldset>
+		</div>
+
+        <div class="col-md-4">
+            <fieldset>
+                <legend class='legend'>
+                    <span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>
+                    Dinner Recommendations</legend>
+
+                        <ul style="list-style-type:circle">
+                          <li id='first_dinner_recipe_name'></li>
+                          <li id='second_dinner_recipe_name'></li>
+                          <li id='third_dinner_recipe_name'></li>
+                          <li id='fourth_dinner_recipe_name'></li>
+                          <li id='fifth_dinner_recipe_name'></li>
+                        </ul>
+            </fieldset>
+		</div>
+    </div>
+</div>
+
+</body>
+
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="/static/js/bootstrap.min.js"></script>
+  <script>
+
+
+  $('#submit').click( () => { cool(); } );
+
+  function render_crashimage(prediction){
+
+      let img = document.getElementById('gif');
+      console.log('the prediction is' + prediction);
+      switch (prediction === 1) {
+
+        case true:
+         console.log('this is true ' + prediction)
+         var gifs = Array('alive','jim_alive','rapper_alive','snl_alive')
+         var item = gifs[Math.floor(Math.random()*gifs.length)];
+         img.src='/static/images/' + item + '.gif';
+         break;
+
+        case false:
+         console.log('this is false ' + prediction)
+         var fgifs = Array('fatal','office_fatal','r2_fatal','dog_fatal')
+         var fitem = fgifs[Math.floor(Math.random()*fgifs.length)];
+         img.src='/static/images/' + fitem + '.gif';
+         break;
+      }
+
+
+    };
+
+  function cool(){
+    let features = {
+  'Steps': $('#Steps').val(),
+  'Minutes_Lightly_Active': $('#Minutes_Lightly_Active').val(),
+  'Minutes_Fairly_Active': $('#Minutes_Fairly_Active').val(),
+  'Minutes_Very_Active': $('#Minutes_Very_Active').val(),
+  'Daily_Calories': $('#Daily_Calories').val(),
+  'Percent_Breakfast': $('#Percent_Breakfast').val(),
+  'Percent_Lunch': $('#Percent_Lunch').val(),
+  'Percent_Dinner': $('#Percent_Dinner').val(),
+  'Daily_Fat': $('#Daily_Fat').val(),
+  'Daily_Carbs': $('#Daily_Carbs').val(),
+  'Daily_Protein': $('#Daily_Protein').val(),
+  'Date': $('#Future_Date').val(),
+  'american': document.getElementById('american').checked,
+  'italian': document.getElementById('italian').checked,
+  'chinese': document.getElementById('chinese').checked,
+  'mexican': document.getElementById('mexican').checked,
+  'japanese': document.getElementById('japanese').checked,
+  'greek': document.getElementById('greek').checked,
+  'mediterranean': document.getElementById('mediterranean').checked,
+  'barbecue': document.getElementById('barbecue').checked,
+  'german': document.getElementById('german').checked
+}
+    console.log(features);
+
+    $.ajax({
+      type: "POST",
+      contentType: "application/json; charset=utf-8",
+      url: "/predict",  // Replace with URL of POST handler
+      dataType: "json",
+      async: true,
+      data: JSON.stringify(features),
+      success: (result) => {
+        $('#hard_predict').html(result['predicted_weight']);
+        $('#lower_predict').html(result['predicted_weight_lower']);
+        $('#upper_predict').html(result['predicted_weight_upper']);
+        $('#breakfast_image').html(result['breakfast_image']);
+        $('#lunch_image').html(result['lunch_image']);
+        $('#dinner_image').html(result['dinner_image']);
+
+        const get_link = (name) => {
+            msg = "<a href='" + result[name+'_url'] + "'>" + result[name + '_name'] + '</a>';
+            return msg;
+        }
+
+
+        const ordinals = ['first_', 'second_', 'third_', 'fourth_', 'fifth_'];
+        ordinals.forEach( (prefix) => {
+            const meals = ['breakfast', 'lunch', 'dinner'];
+            meals.forEach( (meal) => {
+                const meal_recipe = prefix + meal + '_recipe';
+                $('#'+meal_recipe+'_name').html(get_link(meal_recipe));
+            });
+        });
+
+
+
+
+        //render_crashimage(result['prediction']);
+      },
+      error: (result) => {
+        alert('I dunno what you did');
+      }
+    })
+
+  }
+
+  </script>
+
+</html>
