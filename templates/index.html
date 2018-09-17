@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Weight Loss App</title>
     <link href="/static/css/bootstrap.min.css" rel="stylesheet"/>
-    <link href="/static/css/style10.css" rel="stylesheet">
+    <link href="/static/css/style13.css" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
 </head>
 
@@ -41,8 +41,8 @@
 
 <div class="jumbotron">
 	<div class="container">
-		<h1>Brett don't get fat again!</h1>
-		<p>Brett was fat. Brett was also Brent. Now, he's not fat Brett.</p>
+		<h1>Health!</h1>
+		<p>It's important.</p>
 	</div>
 </div>
 
@@ -147,22 +147,7 @@
             </fieldset>
 		</div>
 
-        <div class="col-md-6">
-            <fieldset>
-                <legend class='legend'>
-                    <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-                    Weight Prediction Date</legend>
 
-                <div class='Future_Date'>
-                    <input type='date' id='Future_Date' name='Future_Date'
-                           value='2018-10-01' />
-                    <label for='Future_Date'>Date</label>
-                </div>
-            </fieldset>
-		</div>
-    </div>
-
-    <div class="row">
         <div class='col-md-6'>
             <fieldset>
                 <legend>Which cuisines do you like?</legend>
@@ -231,6 +216,25 @@
 <br>
 
 <div class="jumbotron">
+        <div class='Future_Date'>
+            <h1><span>Date to predict weight on:</span></h1>
+            <br>
+            <input type='date' id='Future_Date' name='Future_Date'
+                   value='2018-09-01' class='datebox'/>
+        </div>
+        <br>
+    <p><a class="btn btn-primary btn-lg" href="#" id="submit" role="button">Make prediction</a></p>
+    <br>
+    <div class="container">
+        <div class="col-md-12">
+            <h1><span>Your Predicted Weight: </span><span id="hard_predict">lbs.</span></h1>
+    		<p><span>Lower bound: <span id="lower_predict"></span>lbs.</span></p>
+            <p><span>Upper bound: <span id="upper_predict"></span>lbs.</span></p>
+        </div>
+	</div>
+</div>
+
+<!-- <div class="jumbotron">
 	<div class="container">
         <div class="panel panel-warning">
           <div class="panel-heading">
@@ -245,7 +249,7 @@
         <p><a class="btn btn-primary btn-lg" href="#" id="submit" role="button">Make prediction</a></p>
         <br>
     </div>
-</div>
+</div> -->
 
 <div class="container">
 	<div class="row">
@@ -257,10 +261,16 @@
 
                         <ul style="list-style-type:circle">
                           <li id='first_breakfast_recipe_name'></li>
+                          <br>
                           <li id='second_breakfast_recipe_name'></li>
+                          <br>
                           <li id='third_breakfast_recipe_name'></li>
+                          <br>
                           <li id='fourth_breakfast_recipe_name'></li>
+                          <br>
                           <li id='fifth_breakfast_recipe_name'></li>
+                          <br>
+
                         </ul>
             </fieldset>
 		</div>
@@ -273,10 +283,15 @@
 
                         <ul style="list-style-type:circle">
                           <li id='first_lunch_recipe_name'></li>
+                          <br>
                           <li id='second_lunch_recipe_name'></li>
+                          <br>
                           <li id='third_lunch_recipe_name'></li>
+                          <br>
                           <li id='fourth_lunch_recipe_name'></li>
-                          <li id='fifth_lunch_recipe_name'></li>
+                          <br>
+                          <li id='fifth_lunch_recipe_name'></li></li>
+                          <br>
                         </ul>
             </fieldset>
 		</div>
@@ -289,15 +304,74 @@
 
                         <ul style="list-style-type:circle">
                           <li id='first_dinner_recipe_name'></li>
+                          <br>
                           <li id='second_dinner_recipe_name'></li>
+                          <br>
                           <li id='third_dinner_recipe_name'></li>
+                          <br>
                           <li id='fourth_dinner_recipe_name'></li>
+                          <br>
                           <li id='fifth_dinner_recipe_name'></li>
                         </ul>
             </fieldset>
 		</div>
     </div>
+
+    <br>
+
+    <table class="table table-striped table-dark table-bordered table-hover">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Meal</th>
+          <th scope="col" align='center'>Calories</th>
+          <th scope="col" align='center'>Fat (g)</th>
+          <th scope="col" align='center'>Protein (g)</th>
+          <th scope="col" align='center'>Carbohydrates (g)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Breakfast</th>
+          <td id='breakfast_calories' align='center'></td>
+          <td id='breakfast_g_fat' align='center'></td>
+          <td id='breakfast_g_protein' align='center'></td>
+          <td id='breakfast_g_carbs' align='center'></td>
+        </tr>
+        <tr>
+          <th scope="row">Lunch</th>
+          <td id='lunch_calories' align='center'></td>
+          <td id='lunch_g_fat' align='center'></td>
+          <td id='lunch_g_protein' align='center'></td>
+          <td id='lunch_g_carbs' align='center'></td>
+        </tr>
+        <tr>
+          <th scope="row">Dinner</th>
+          <td id='dinner_calories' align='center'></td>
+          <td id='dinner_g_fat' align='center'></td>
+          <td id='dinner_g_protein' align='center'></td>
+          <td id='dinner_g_carbs' align='center'></td>
+        </tr>
+    </tbody>
+    </table>
+
+
 </div>
+
+<!-- <div class="container">
+	<div class="row">
+		<div class="col-md-4">
+            <img src='breakfast_image' id='breakfast_image' align: 'middle'/>
+		</div>
+
+        <div class="col-md-4">
+            <img src='lunch_image' id='lunch_image' align: 'middle'/>
+		</div>
+
+        <div class="col-md-4">
+            <img src='dinner_image' id='dinner_image' align: 'middle'/>
+		</div>
+    </div>
+</div> -->
 
 </body>
 
@@ -370,9 +444,18 @@
         $('#hard_predict').html(result['predicted_weight']);
         $('#lower_predict').html(result['predicted_weight_lower']);
         $('#upper_predict').html(result['predicted_weight_upper']);
-        $('#breakfast_image').html(result['breakfast_image']);
-        $('#lunch_image').html(result['lunch_image']);
-        $('#dinner_image').html(result['dinner_image']);
+        $('#breakfast_calories').html(result['breakfast_calories']);
+        $('#lunch_calories').html(result['lunch_calories']);
+        $('#dinner_calories').html(result['dinner_calories']);
+        $('#breakfast_g_fat').html(result['breakfast_g_fat']);
+        $('#lunch_g_fat').html(result['lunch_g_fat']);
+        $('#dinner_g_fat').html(result['dinner_g_fat']);
+        $('#breakfast_g_protein').html(result['breakfast_g_protein']);
+        $('#lunch_g_protein').html(result['lunch_g_protein']);
+        $('#dinner_g_protein').html(result['dinner_g_protein']);
+        $('#breakfast_g_carbs').html(result['breakfast_g_carbs']);
+        $('#lunch_g_carbs').html(result['lunch_g_carbs']);
+        $('#dinner_g_carbs').html(result['dinner_g_carbs']);
 
         const get_link = (name) => {
             msg = "<a href='" + result[name+'_url'] + "'>" + result[name + '_name'] + '</a>';

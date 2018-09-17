@@ -1,5 +1,5 @@
 from flask import Flask, abort, render_template, jsonify, request
-from api import prophet_forecast_weight, nutritional_breakdown, get_features, example, df
+from api import prophet_forecast_weight, nutritional_breakdown, get_features, example, df, get_image
 from api import yummly_df, recipe_cosine_similarity, get_closest_recipes, food_recommendations, flask_output
 import random
 
